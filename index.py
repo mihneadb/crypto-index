@@ -1,4 +1,4 @@
-from constants import MAIN_CURRENCY, MIN_DIFF, Actions
+from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT
 from order_spec import OrderSpec
 
 
@@ -28,7 +28,7 @@ def get_ideal_portfolio(portfolio_value, market_data):
     return ideal_portfolio
 
 
-def get_rebalance_orders(market_data, balance, top_limit=20):
+def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     """Generates the required orders to rebalance the portfolio against market data.
 
     Orders are sorted - the sells come first.
@@ -69,3 +69,13 @@ def get_rebalance_orders(market_data, balance, top_limit=20):
 
     # SELL < BUY so they get to the beginning of the array.
     return sorted(orders, key=lambda o: 1 if o.action == Actions.SELL else 2)
+
+
+def get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
+    return [o for o in get_rebalance_orders(market_data, balance, top_limit)
+            if o.action == Actions.SELL]
+
+
+def get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
+    return [o for o in get_rebalance_orders(market_data, balance, top_limit)
+            if o.action == Actions.BUY]

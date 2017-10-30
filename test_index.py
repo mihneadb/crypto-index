@@ -1,5 +1,7 @@
 import unittest
 
+from mock import patch
+
 import index
 from constants import Actions
 from order_spec import OrderSpec
@@ -65,4 +67,50 @@ class TestIndex(unittest.TestCase):
                       amount=14.39),
         ]
 
+        self.assertEqual(orders, expected_orders)
+
+    @patch('index.get_rebalance_orders')
+    def test_get_sell_rebalance_orders(self, mock_get_rebalance_orders):
+        mock_get_rebalance_orders.return_value = [
+            OrderSpec(action=Actions.SELL,
+                      coin='ETH',
+                      price=1,
+                      amount=1),
+            OrderSpec(action=Actions.BUY,
+                      coin='VRT',
+                      price=1,
+                      amount=1),
+        ]
+
+        # Inner method is already mocked.
+        orders = index.get_sell_rebalance_orders(None, None)
+        expected_orders = [
+            OrderSpec(action=Actions.SELL,
+                      coin='ETH',
+                      price=1,
+                      amount=1),
+        ]
+        self.assertEqual(orders, expected_orders)
+
+    @patch('index.get_rebalance_orders')
+    def test_get_buy_rebalance_orders(self, mock_get_rebalance_orders):
+        mock_get_rebalance_orders.return_value = [
+            OrderSpec(action=Actions.SELL,
+                      coin='ETH',
+                      price=1,
+                      amount=1),
+            OrderSpec(action=Actions.BUY,
+                      coin='VRT',
+                      price=1,
+                      amount=1),
+        ]
+
+        # Inner method is already mocked.
+        orders = index.get_buy_rebalance_orders(None, None)
+        expected_orders = [
+            OrderSpec(action=Actions.BUY,
+                      coin='VRT',
+                      price=1,
+                      amount=1),
+        ]
         self.assertEqual(orders, expected_orders)
