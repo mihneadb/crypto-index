@@ -3,6 +3,7 @@ from order_spec import OrderSpec
 
 
 def get_portfolio_value(balance, prices):
+    """Computes total amount that the portfolio is worth."""
     portfolio_value = 0.0
 
     for item in balance:
@@ -15,6 +16,7 @@ def get_portfolio_value(balance, prices):
 
 
 def get_ideal_portfolio(portfolio_value, market_data):
+    """Computes the equal-weighted portfolio consisting of market_data items."""
     ideal_portfolio = {}
 
     # We expect market_data to be filtered to the coins we care about.
