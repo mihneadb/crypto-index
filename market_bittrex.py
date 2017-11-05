@@ -2,6 +2,8 @@ import json
 
 from bittrex.bittrex import Bittrex, API_V1_1
 
+from constants import Actions, MAIN_CURRENCY
+
 
 def get_bittrex():
     with open('key.json') as f:
@@ -35,3 +37,17 @@ def get_balance_entry(balance):
         'name': balance['Currency'],
         'value': balance['Available'],
     }
+
+
+def exec_order_spec(order_spec):
+    b = get_bittrex()
+    market = '%s-%s' % (MAIN_CURRENCY, order_spec.coin)
+
+    if order_spec.action == Actions.BUY:
+        fn = b.buy_limit
+    elif order_spec.action == Actions.SELL:
+        fn = b.sell_limit
+    else:
+        raise ValueError("Invalid action")
+
+    return fn(market, order_spec.amount, order_spec.price)
