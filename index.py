@@ -10,7 +10,7 @@ def get_portfolio_value(balance, prices):
         if item['name'] == MAIN_CURRENCY:
             portfolio_value += item['value']
         else:
-            portfolio_value += item['value'] * prices[item['name']]
+            portfolio_value += item['value'] * prices.get(item['name'], 0)
 
     return portfolio_value
 
@@ -64,7 +64,7 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     for coin, current_value in portfolio.items():
         order = OrderSpec(action=Actions.SELL,
                           coin=coin,
-                          price=prices[coin],
+                          price=prices.get(coin, 0),
                           amount=current_value)
         orders.append(order)
 
