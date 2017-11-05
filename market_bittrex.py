@@ -4,7 +4,7 @@ from bittrex.bittrex import Bittrex, API_V1_1
 
 
 def get_bittrex():
-    with open('key.txt') as f:
+    with open('key.json') as f:
         data = json.load(f)
         return Bittrex(data['key'], data['secret'], api_version=API_V1_1)
 
