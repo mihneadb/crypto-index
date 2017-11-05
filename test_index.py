@@ -21,7 +21,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'ETH', 'value': 7},
         ]
 
-        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)
+        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -51,7 +51,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'TOSELL', 'value': 0.3},
         ]
 
-        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)
+        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -71,7 +71,7 @@ class TestIndex(unittest.TestCase):
 
     @patch('index.get_rebalance_orders')
     def test_get_sell_rebalance_orders(self, mock_get_rebalance_orders):
-        mock_get_rebalance_orders.return_value = [
+        mock_get_rebalance_orders.return_value = ([
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
                       price=1,
@@ -80,7 +80,8 @@ class TestIndex(unittest.TestCase):
                       coin='VRT',
                       price=1,
                       amount=1),
-        ]
+        ],
+        {})
 
         # Inner method is already mocked.
         orders = index.get_sell_rebalance_orders(None, None)
@@ -94,7 +95,7 @@ class TestIndex(unittest.TestCase):
 
     @patch('index.get_rebalance_orders')
     def test_get_buy_rebalance_orders(self, mock_get_rebalance_orders):
-        mock_get_rebalance_orders.return_value = [
+        mock_get_rebalance_orders.return_value = ([
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
                       price=1,
@@ -103,7 +104,8 @@ class TestIndex(unittest.TestCase):
                       coin='VRT',
                       price=1,
                       amount=1),
-        ]
+        ],
+        {})
 
         # Inner method is already mocked.
         orders = index.get_buy_rebalance_orders(None, None)

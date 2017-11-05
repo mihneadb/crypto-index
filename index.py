@@ -32,6 +32,7 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     """Generates the required orders to rebalance the portfolio against market data.
 
     Orders are sorted - the sells come first.
+    Returns order list as well as ideal portfolio at this point.
     """
     prices = {item['name']: item['price'] for item in market_data}
     portfolio = {item['name']: item['value'] for item in balance}
@@ -68,14 +69,15 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
         orders.append(order)
 
     # SELL < BUY so they get to the beginning of the array.
-    return sorted(orders, key=lambda o: 1 if o.action == Actions.SELL else 2)
+    rebalance_orders = sorted(orders, key=lambda o: 1 if o.action == Actions.SELL else 2)
+    return rebalance_orders, ideal_portfolio
 
 
 def get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
-    return [o for o in get_rebalance_orders(market_data, balance, top_limit)
+    return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
             if o.action == Actions.SELL]
 
 
 def get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
-    return [o for o in get_rebalance_orders(market_data, balance, top_limit)
+    return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
             if o.action == Actions.BUY]
