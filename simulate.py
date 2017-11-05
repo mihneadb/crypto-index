@@ -22,12 +22,12 @@ if __name__ == '__main__':
     # Sort by week asc.
     historical_data.sort(key=lambda x: x[0])
 
-    for week, market_data in historical_data:
-        orders, portfolio = get_rebalance_orders(market_data, balance, top_limit=80)
+    for week, market_data in historical_data[-8:]:
+        orders, portfolio = get_rebalance_orders(market_data, balance, top_limit=300)
         balance = portfolio_to_balance(portfolio)
 
     prices = {item['name']: item['price'] for item in market_data}
     total_value = get_portfolio_value(balance, prices)
-    print portfolio
-    print len(portfolio)
+    # print portfolio
+    # print len(portfolio)
     print "Started with %f BTC, ended with (equivalent) %f BTC." % (INITIAL_BTC, total_value)
