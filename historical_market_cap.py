@@ -19,13 +19,17 @@ for i in range(52):
     week_data = []
     for row in rows:
         try:
-            coin_data = {
-                'price': float(row.find('a', {'class': 'price'}).get('data-btc')),
-                'name': row.find_all('td')[2].text,
-                'volume': float(row.find('a', {'class': 'volume'}).get('data-btc')),
-            }
-        except:
-            continue
+            market_cap = float(row.find('td', {'class': 'market-cap'}).get('data-btc'))
+        except ValueError:
+            # Sometimes value is '?' for market cap.
+            market_cap = 0
+
+        coin_data = {
+            'price': float(row.find('a', {'class': 'price'}).get('data-btc')),
+            'name': row.find_all('td')[2].text,
+            'volume': float(row.find('a', {'class': 'volume'}).get('data-btc')),
+            'market_cap': market_cap
+        }
         week_data.append(coin_data)
 
     data.append([date, week_data])
