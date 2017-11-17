@@ -1,4 +1,4 @@
-from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT, VALUE_KEY
+from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT, ValueKeys
 from order_spec import OrderSpec
 
 
@@ -15,7 +15,7 @@ def get_portfolio_value(balance, prices):
     return portfolio_value
 
 
-def get_ideal_portfolio(portfolio_value, market_data):
+def get_ideal_portfolio(portfolio_value, market_data, ):
     """Computes the equal-weighted portfolio consisting of market_data items."""
     ideal_portfolio = {}
 
@@ -28,7 +28,7 @@ def get_ideal_portfolio(portfolio_value, market_data):
     return ideal_portfolio
 
 
-def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
+def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
     """Generates the required orders to rebalance the portfolio against market data.
 
     Orders are sorted - the sells come first.
@@ -39,7 +39,7 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     # Drop main currency from portfolio, we're not considering it here.
     portfolio.pop(MAIN_CURRENCY, None)
 
-    top_market_data = sorted(market_data, key=lambda md: md[VALUE_KEY], reverse=True)[:top_limit]
+    top_market_data = sorted(market_data, key=lambda md: md[value_key], reverse=True)[:top_limit]
     portfolio_value = get_portfolio_value(balance, prices)
     ideal_portfolio = get_ideal_portfolio(portfolio_value, top_market_data)
 
@@ -73,11 +73,11 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     return rebalance_orders, ideal_portfolio
 
 
-def get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
+def get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
     return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
             if o.action == Actions.SELL]
 
 
-def get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
+def get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
     return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
             if o.action == Actions.BUY]
