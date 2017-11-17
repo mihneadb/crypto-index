@@ -1,4 +1,4 @@
-from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT
+from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT, VALUE_KEY
 from order_spec import OrderSpec
 
 
@@ -39,7 +39,7 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT):
     # Drop main currency from portfolio, we're not considering it here.
     portfolio.pop(MAIN_CURRENCY, None)
 
-    top_market_data = sorted(market_data, key=lambda md: md['volume'], reverse=True)[:top_limit]
+    top_market_data = sorted(market_data, key=lambda md: md[VALUE_KEY], reverse=True)[:top_limit]
     portfolio_value = get_portfolio_value(balance, prices)
     ideal_portfolio = get_ideal_portfolio(portfolio_value, top_market_data)
 
