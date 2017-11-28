@@ -4,13 +4,13 @@ from bs4 import BeautifulSoup
 from constants import MAIN_CURRENCY
 
 
-def get_coinmarketcap():
+def get_coinmarketcap(main_currency=MAIN_CURRENCY):
     r = requests.get('https://coinmarketcap.com/all/views/all/')
     soup = BeautifulSoup(r.text, 'html5lib')
-    return scrape_coins(soup)
+    return scrape_coins(soup, main_currency=main_currency)
 
 
-def scrape_coins(soup):
+def scrape_coins(soup, main_currency=MAIN_CURRENCY):
     rows = soup.find_all('table', {'id': 'currencies-all'})[0].find_all('tr')[1:]
 
     data = []
@@ -33,7 +33,7 @@ def scrape_coins(soup):
             continue
 
         # Skip main currency, can't "buy" it.
-        if coin_data['name'] == MAIN_CURRENCY:
+        if coin_data['name'] == main_currency:
             continue
 
         data.append(coin_data)
