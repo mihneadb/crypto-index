@@ -56,8 +56,8 @@ class TestMarketBittrex(unittest.TestCase):
 
         market_data = get_market_data(MAIN_CURRENCY)
         expected_market_data = [
-            {'name': 'ZEC', 'volume': 14111.93199843, 'price': (0.0390995 + 0.03900011) / 2},
-            {'name': 'ZEN', 'volume': 94613.73704344, 'price': (0.0032211 + 0.00321995) / 2},
+            {'name': 'ZEC', 'volume': 14111.93199843, 'price': 0.0390001},
+            {'name': 'ZEN', 'volume': 94613.73704344, 'price': 0.00322},
         ]
         self.assertEqual(market_data, expected_market_data)
 
