@@ -1,5 +1,5 @@
-from constants import MAIN_CURRENCY, ValueKeys
-from index import get_sell_rebalance_orders, get_buy_rebalance_orders
+from constants import MAIN_CURRENCY, ValueKeys, Actions
+from index import get_rebalance_orders
 from market_bittrex import get_balance, get_market_data
 
 
@@ -10,8 +10,9 @@ if __name__ == '__main__':
     balance = get_balance()
     market_data = get_market_data(MAIN_CURRENCY)
 
-    sell_orders = get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=VALUE_KEY)
-    buy_orders = get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=VALUE_KEY)
+    orders, ideal_portfolio = get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=VALUE_KEY)
+    sell_orders = [o for o in orders if o.action == Actions.SELL]
+    buy_orders = [o for o in orders if o.action == Actions.BUY]
 
     from pprint import pprint
     print "Balance now:"

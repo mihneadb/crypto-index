@@ -50,6 +50,7 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=Va
         diff = ideal_value - current_value
 
         # Not worth making an order for this.
+        # TODO: value in bitcoin + minimum allowed trade by Bittrex (0.001 BTC)
         if abs(diff) < MIN_DIFF:
             continue
 
@@ -71,13 +72,3 @@ def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=Va
     # SELL < BUY so they get to the beginning of the array.
     rebalance_orders = sorted(orders, key=lambda o: 1 if o.action == Actions.SELL else 2)
     return rebalance_orders, ideal_portfolio
-
-
-def get_sell_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
-    return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
-            if o.action == Actions.SELL]
-
-
-def get_buy_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
-    return [o for o in get_rebalance_orders(market_data, balance, top_limit)[0]
-            if o.action == Actions.BUY]
