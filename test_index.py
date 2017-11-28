@@ -1,9 +1,8 @@
 import unittest
 
-from mock import patch
-
 import index
-from constants import Actions
+from constants import Actions, ValueKeys
+from index import get_top_market_data
 from order_spec import OrderSpec
 
 
@@ -14,6 +13,11 @@ class TestIndex(unittest.TestCase):
             {'name': 'ETH', 'volume': 10000, 'price': 0.3},
             {'name': 'FOO', 'volume': 42, 'price': 42},
         ]
+        global_market_data = [
+            {'name': 'VRT', 'volume': 9000, 'market_cap': 9000, 'price': 0.1},
+            {'name': 'ETH', 'volume': 10000, 'market_cap': 10000, 'price': 0.3},
+            {'name': 'FOO', 'volume': 42, 'market_cap': 42, 'price': 42},
+        ]
 
         balance = [
             {'name': 'BTC', 'value': 1.3},
@@ -21,7 +25,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'ETH', 'value': 7},
         ]
 
-        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)[0]
+        orders = index.get_rebalance_orders(market_data, global_market_data, balance, top_limit=2, value_key=ValueKeys.MARKET_CAP)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -43,6 +47,12 @@ class TestIndex(unittest.TestCase):
             {'name': 'FOO', 'volume': 42, 'price': 42},
             {'name': 'TOSELL', 'volume': 42, 'price': 1},
         ]
+        global_market_data = [
+            {'name': 'VRT', 'volume': 9000, 'market_cap': 9000, 'price': 0.1},
+            {'name': 'ETH', 'volume': 10000, 'market_cap': 10000, 'price': 0.3},
+            {'name': 'FOO', 'volume': 42, 'market_cap': 42, 'price': 42},
+            {'name': 'TOSELL', 'volume': 42, 'market_cap': 42, 'price': 1},
+        ]
 
         balance = [
             {'name': 'BTC', 'value': 1.0},
@@ -51,7 +61,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'TOSELL', 'value': 0.3},
         ]
 
-        orders = index.get_rebalance_orders(market_data, balance, top_limit=2)[0]
+        orders = index.get_rebalance_orders(market_data, global_market_data, balance, top_limit=2)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -68,3 +78,24 @@ class TestIndex(unittest.TestCase):
         ]
 
         self.assertEqual(orders, expected_orders)
+
+    def test_get_top_market_data(self):
+        market_data = [
+            # ETH is missing, assuming the exchange does not sell it.
+            {'name': 'FOO', 'volume': 42, 'price': 42},
+            {'name': 'VRT', 'volume': 9000, 'price': 0.1},
+        ]
+        global_market_data = [
+            {'name': 'VRT', 'volume': 9000, 'market_cap': 9000, 'price': 0.1},
+            {'name': 'ETH', 'volume': 10000, 'market_cap': 10000, 'price': 0.3},
+            {'name': 'FOO', 'volume': 42, 'market_cap': 42, 'price': 42},
+        ]
+
+        top_market_data = get_top_market_data(market_data, global_market_data,
+                                              value_key=ValueKeys.MARKET_CAP,
+                                              top_limit=2)
+        expected_top_market_data = [
+            {'name': 'VRT', 'volume': 9000, 'price': 0.1},
+            {'name': 'FOO', 'volume': 42, 'price': 42},
+        ]
+        self.assertEqual(top_market_data, expected_top_market_data)

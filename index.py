@@ -15,6 +15,28 @@ def get_portfolio_value(balance, prices):
     return portfolio_value
 
 
+def get_top_market_data(exchange_market_data, global_market_data,
+                        value_key=ValueKeys.MARKET_CAP, top_limit=TOP_LIMIT):
+    """Uses global market data to choose the best coins from the exchange's market."""
+    sorted_global_market_data = sorted(global_market_data, key=lambda md: md[value_key], reverse=True)
+    top_market_data = []
+
+    i = 0
+    total = 0
+    while total < top_limit:
+        for coin_data in exchange_market_data:
+            if coin_data['name'] == sorted_global_market_data[i]['name']:
+                top_market_data.append(coin_data)
+                total += 1
+                i += 1
+                break
+        else:
+            # This coin is not sold in the exchange, skip it.
+            i += 1
+
+    return top_market_data
+
+
 def get_ideal_portfolio(portfolio_value, market_data, ):
     """Computes the equal-weighted portfolio consisting of market_data items."""
     ideal_portfolio = {}
@@ -28,18 +50,22 @@ def get_ideal_portfolio(portfolio_value, market_data, ):
     return ideal_portfolio
 
 
-def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.MARKET_CAP):
+def get_rebalance_orders(exchange_market_data, global_market_data,
+                         balance, top_limit=TOP_LIMIT, value_key=ValueKeys.MARKET_CAP):
     """Generates the required orders to rebalance the portfolio against market data.
 
+    Looks at global market data as source of truth - tries to stick to it.
     Orders are sorted - the sells come first.
     Returns order list as well as ideal portfolio at this point.
     """
-    prices = {item['name']: item['price'] for item in market_data}
+    prices = {item['name']: item['price'] for item in exchange_market_data}
     portfolio = {item['name']: item['value'] for item in balance}
     # Drop main currency from portfolio, we're not considering it here.
     portfolio.pop(MAIN_CURRENCY, None)
 
-    top_market_data = sorted(market_data, key=lambda md: md[value_key], reverse=True)[:top_limit]
+    top_market_data = get_top_market_data(exchange_market_data, global_market_data,
+                                          value_key=value_key, top_limit=top_limit)
+
     portfolio_value = get_portfolio_value(balance, prices)
     ideal_portfolio = get_ideal_portfolio(portfolio_value, top_market_data)
 
