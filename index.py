@@ -28,7 +28,7 @@ def get_ideal_portfolio(portfolio_value, market_data, ):
     return ideal_portfolio
 
 
-def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.VOLUME):
+def get_rebalance_orders(market_data, balance, top_limit=TOP_LIMIT, value_key=ValueKeys.MARKET_CAP):
     """Generates the required orders to rebalance the portfolio against market data.
 
     Orders are sorted - the sells come first.
