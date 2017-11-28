@@ -23,7 +23,7 @@ def get_market_data_entry(summary, currency):
         'name': summary['MarketName'].replace('%s-' % currency, ''),
         'volume': summary['Volume'],
         # Hope for the best.
-        'price': (summary['Last'])
+        'price': summary['Last']
     }
 
 
