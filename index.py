@@ -1,4 +1,4 @@
-from constants import MAIN_CURRENCY, MIN_DIFF, Actions, TOP_LIMIT, ValueKeys
+from constants import MAIN_CURRENCY, Actions, TOP_LIMIT, ValueKeys, MIN_TRADE_VALUE
 from order_spec import OrderSpec
 
 
@@ -75,9 +75,9 @@ def get_rebalance_orders(exchange_market_data, global_market_data,
         current_value = portfolio.pop(coin, 0)
         diff = ideal_value - current_value
 
-        # Not worth making an order for this.
-        # TODO: value in bitcoin + minimum allowed trade by Bittrex (0.001 BTC)
-        if abs(diff) < MIN_DIFF:
+        # The exchange imposes a minimum order.
+        order_value = abs(diff) * prices[coin]
+        if order_value < MIN_TRADE_VALUE:
             continue
 
         action = Actions.BUY if diff > 0 else Actions.SELL
