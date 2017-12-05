@@ -31,8 +31,14 @@ if __name__ == '__main__':
     print "To buy:"
     pprint(buy_orders)
 
-    # for order in sell_orders:
-    #     pprint(exec_order_spec(order))
-    #
-    # for order in buy_orders:
-    #     pprint(exec_order_spec(order))
+    print "Exec sells?"
+    r = raw_input("Y/n ")
+    if r == 'Y':
+        for order in sell_orders:
+            pprint(exec_order_spec(order))
+
+    print "Exec buys?"
+    r = raw_input("Y/n ")
+    if r == 'Y':
+        for order in buy_orders:
+            pprint(exec_order_spec(order))
