@@ -1,3 +1,5 @@
 python-bittrex
 mock
 ipdb
+beautifulsoup4
+html5lib
