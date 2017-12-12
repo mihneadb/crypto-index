@@ -5,7 +5,7 @@ from market_bittrex import get_balance, get_market_data, exec_order_spec
 
 
 if __name__ == '__main__':
-    TOP_LIMIT = 10
+    TOP_LIMIT = 20
     VALUE_KEY = ValueKeys.MARKET_CAP
 
     balance = get_balance()
