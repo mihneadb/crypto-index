@@ -29,7 +29,8 @@ def get_market_data_entry(summary, currency):
 
 def get_balance():
     balances = get_bittrex().get_balances()
-    return [get_balance_entry(b) for b in balances['result']]
+    formatted = [get_balance_entry(b) for b in balances['result']]
+    return [b for b in formatted if b['value']]
 
 
 def get_balance_entry(balance):
