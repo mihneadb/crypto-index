@@ -1,4 +1,4 @@
-from constants import MAIN_CURRENCY, Actions, TOP_LIMIT, ValueKeys, MIN_TRADE_VALUE
+from constants import MAIN_CURRENCY, Actions, TOP_LIMIT, ValueKeys, MIN_TRADE_VALUE, IGNORED_CURRENCIES
 from order_spec import OrderSpec
 
 
@@ -25,6 +25,8 @@ def get_top_market_data(exchange_market_data, global_market_data,
     total = 0
     while total < top_limit:
         for coin_data in exchange_market_data:
+            if coin_data['name'] in IGNORED_CURRENCIES:
+                continue
             if coin_data['name'] == sorted_global_market_data[i]['name']:
                 top_market_data.append(coin_data)
                 total += 1

@@ -4,6 +4,9 @@ MIN_TRADE_VALUE = 0.001  # 100.000 Satoshi (Bittrex)
 TOP_LIMIT = 20
 
 
+IGNORED_CURRENCIES = ['DOGE']
+
+
 class Actions(object):
     SELL = 'sell'
     BUY = 'buy'
