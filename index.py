@@ -48,7 +48,7 @@ class Index(object):
                     top_market_data.append(coin_data)
         return top_market_data
 
-    def get_ideal_portfolio(self, portfolio_value, market_data, ):
+    def get_ideal_portfolio(self, portfolio_value, market_data):
         """Computes the equal-weighted portfolio consisting of market_data items."""
         ideal_portfolio = {}
 
