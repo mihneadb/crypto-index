@@ -1,10 +1,9 @@
 from collections import namedtuple
-from pprint import pprint
 
 from binance.client import Client
 from scipy import stats
 
-from constants import MAIN_CURRENCY, TOP_LIMIT, ValueKeys
+from constants import MAIN_CURRENCY, TOP_LIMIT, ValueKeys, NUM_DAYS_TO_CHECK
 from index import Index
 from market_binance import get_binance
 
@@ -38,14 +37,11 @@ def get_all_klines():
     exchange_info = client.get_exchange_info()
     symbols = [s for s in exchange_info['symbols'] if s['quoteAsset'] == MAIN_CURRENCY]
 
-    print len(symbols)
-
-
     klines = {}
     for s in symbols:
         historical_klines = client.get_historical_klines(s['symbol'],
                                                          Client.KLINE_INTERVAL_1DAY,
-                                                         '31 days ago UTC',
+                                                         '%s days ago UTC' % NUM_DAYS_TO_CHECK,
                                                          'now UTC')
         klines[s['baseAsset']] = historical_klines
     return klines
@@ -69,11 +65,10 @@ def get_best_growth_assets(klines, max_count=10):
 
         growing_klines[asset] = historical_klines
 
-    xs = [1, 2, 3]
     slopes = []
     for asset, historical_klines in growing_klines.iteritems():
         ys = [float(Kline(*h).close) for h in historical_klines]
-        # print len(ys)
+        xs = range(len(ys))
         slope, _, _, _, _ = stats.linregress(xs, ys)
         slopes.append((asset, slope))
 
@@ -88,7 +83,10 @@ def klines_to_market_data(klines):
         entry = {
             'name': asset,
             # Hope for the best.
-            'price': float(Kline(*historical_klines[-1]).close)
+            'price': float(Kline(*historical_klines[-1]).close),
+            # Just for compatibility.
+            ValueKeys.MARKET_CAP: 1,
+            ValueKeys.VOLUME: 1,
         }
         market_data.append(entry)
 

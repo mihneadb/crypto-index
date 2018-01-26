@@ -4,6 +4,7 @@ import json
 from mock.mock import patch
 
 from binance_growth_index import BinanceGrowthIndex, klines_to_market_data
+from constants import NUM_DAYS_TO_CHECK
 from index import Index
 
 
@@ -24,8 +25,8 @@ def get_limited_historical_data(historical_data, step):
     limited_history = {}
 
     for asset in historical_data:
-        data = historical_data[asset][step: 3 + step]
-        if len(data) != 3:
+        data = historical_data[asset][step: NUM_DAYS_TO_CHECK + step]
+        if len(data) != NUM_DAYS_TO_CHECK:
             continue
         limited_history[asset] = data
 
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     patcher = patch('binance_growth_index.get_all_klines')
     get_all_klines_mock = patcher.start()
 
-    for i in range(31 - 2):
+    for i in range(31 - (NUM_DAYS_TO_CHECK - 1)):
         market_data = get_market_data(historical_data, i)
         get_all_klines_mock.return_value = get_limited_historical_data(historical_data, i)
         orders, portfolio = BinanceGrowthIndex().get_rebalance_orders(market_data, market_data, balance,
