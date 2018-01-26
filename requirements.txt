@@ -3,7 +3,7 @@ mock
 ipdb
 beautifulsoup4
 html5lib
-cctx
+ccxt
 python-binance
-nosetests
+nose
 scipy
