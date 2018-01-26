@@ -1,8 +1,7 @@
 import unittest
 
-import index
 from constants import Actions, ValueKeys
-from index import get_top_market_data
+from index import Index
 from order_spec import OrderSpec
 
 
@@ -25,8 +24,8 @@ class TestIndex(unittest.TestCase):
             {'name': 'ETH', 'value': 7},
         ]
 
-        orders = index.get_rebalance_orders(market_data, global_market_data, balance,
-                                            top_limit=2, value_key=ValueKeys.MARKET_CAP)[0]
+        orders = Index().get_rebalance_orders(market_data, global_market_data, balance,
+                                              top_limit=2, value_key=ValueKeys.MARKET_CAP)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -62,7 +61,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'TOSELL', 'value': 0.3},
         ]
 
-        orders = index.get_rebalance_orders(market_data, global_market_data, balance, top_limit=2)[0]
+        orders = Index().get_rebalance_orders(market_data, global_market_data, balance, top_limit=2)[0]
         expected_orders = [
             OrderSpec(action=Actions.SELL,
                       coin='ETH',
@@ -92,9 +91,9 @@ class TestIndex(unittest.TestCase):
             {'name': 'FOO', 'volume': 42, 'market_cap': 42, 'price': 42},
         ]
 
-        top_assets = index.get_top_assets(market_data, global_market_data,
-                                          value_key=ValueKeys.MARKET_CAP,
-                                          top_limit=2)
+        top_assets = Index().get_top_assets(market_data, global_market_data,
+                                            value_key=ValueKeys.MARKET_CAP,
+                                            top_limit=2)
         expected_top_assets = ['VRT', 'FOO']
         self.assertEqual(top_assets, expected_top_assets)
 
@@ -110,7 +109,7 @@ class TestIndex(unittest.TestCase):
             {'name': 'FOO', 'volume': 42, 'market_cap': 42, 'price': 42},
         ]
 
-        top_market_data = get_top_market_data(market_data, ['VRT', 'FOO'])
+        top_market_data = Index().get_top_market_data(market_data, ['VRT', 'FOO'])
         expected_top_market_data = [
             {'name': 'VRT', 'volume': 9000, 'price': 0.1},
             {'name': 'FOO', 'volume': 42, 'price': 42},

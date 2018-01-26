@@ -2,7 +2,7 @@ import argparse
 import json
 
 from constants import ValueKeys
-from index import get_rebalance_orders, get_portfolio_value
+from index import Index
 
 
 INITIAL_BTC = 1
@@ -38,12 +38,12 @@ if __name__ == '__main__':
     historical_data.sort(key=lambda x: x[0])
 
     for week, market_data in historical_data[-args.weeks_back::args.rebalance_period]:
-        orders, portfolio = get_rebalance_orders(market_data, market_data, balance,
-                                                 top_limit=args.top_limit, value_key=ValueKeys.MARKET_CAP)
+        orders, portfolio = Index().get_rebalance_orders(market_data, market_data, balance,
+                                                         top_limit=args.top_limit, value_key=ValueKeys.MARKET_CAP)
         balance = portfolio_to_balance(portfolio)
 
     prices = {item['name']: item['price'] for item in market_data}
-    total_value = get_portfolio_value(balance, prices)
+    total_value = Index().get_portfolio_value(balance, prices)
     # print portfolio
     # print len(portfolio)
     print "Started with %f BTC, ended with (equivalent) %f BTC." % (INITIAL_BTC, total_value)

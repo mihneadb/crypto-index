@@ -1,6 +1,6 @@
 from coinmarketcap import get_coinmarketcap
 from constants import MAIN_CURRENCY, ValueKeys, Actions
-from index import get_rebalance_orders
+from index import Index
 from market_bittrex import get_balance, get_market_data, exec_order_spec
 
 
@@ -12,9 +12,9 @@ if __name__ == '__main__':
     market_data = get_market_data(MAIN_CURRENCY)
     global_market_data = get_coinmarketcap(MAIN_CURRENCY)
 
-    orders, ideal_portfolio = get_rebalance_orders(market_data, global_market_data,
-                                                   balance,
-                                                   top_limit=TOP_LIMIT, value_key=VALUE_KEY)
+    orders, ideal_portfolio = Index().get_rebalance_orders(market_data, global_market_data,
+                                                           balance,
+                                                           top_limit=TOP_LIMIT, value_key=VALUE_KEY)
     sell_orders = [o for o in orders if o.action == Actions.SELL]
     buy_orders = [o for o in orders if o.action == Actions.BUY]
 
