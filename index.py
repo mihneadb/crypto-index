@@ -61,7 +61,8 @@ class Index(object):
         return ideal_portfolio
 
     def get_rebalance_orders(self, exchange_market_data, global_market_data,
-                             balance, top_limit=TOP_LIMIT, value_key=ValueKeys.MARKET_CAP):
+                             balance, top_limit=TOP_LIMIT, value_key=ValueKeys.MARKET_CAP,
+                             min_trade_value=MIN_TRADE_VALUE):
         """Generates the required orders to rebalance the portfolio against market data.
 
         Looks at global market data as source of truth - tries to stick to it.
@@ -88,7 +89,7 @@ class Index(object):
 
             # The exchange imposes a minimum order.
             order_value = abs(diff) * prices[coin]
-            if order_value < MIN_TRADE_VALUE:
+            if order_value < min_trade_value:
                 continue
 
             action = Actions.BUY if diff > 0 else Actions.SELL

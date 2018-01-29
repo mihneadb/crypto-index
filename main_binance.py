@@ -14,7 +14,8 @@ if __name__ == '__main__':
 
     orders, ideal_portfolio = Index().get_rebalance_orders(market_data, market_data,
                                                            balance,
-                                                           top_limit=TOP_LIMIT)
+                                                           top_limit=TOP_LIMIT,
+                                                           min_trade_value=0.002)
     sell_orders = [o for o in orders if o.action == Actions.SELL]
     buy_orders = [o for o in orders if o.action == Actions.BUY]
 
