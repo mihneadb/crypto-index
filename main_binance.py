@@ -1,4 +1,4 @@
-from binance_growth_index import get_all_klines, klines_to_market_data
+from binance_growth_index import get_all_klines, klines_to_market_data, BinanceGrowthIndex
 from constants import Actions
 from index import Index
 from market_binance import get_balance, exec_order_spec
@@ -12,10 +12,10 @@ if __name__ == '__main__':
     all_klines = get_all_klines()
     market_data = klines_to_market_data(all_klines)
 
-    orders, ideal_portfolio = Index().get_rebalance_orders(market_data, market_data,
-                                                           balance,
-                                                           top_limit=TOP_LIMIT,
-                                                           min_trade_value=0.002)
+    orders, ideal_portfolio = BinanceGrowthIndex().get_rebalance_orders(market_data, market_data,
+                                                                        balance,
+                                                                        top_limit=TOP_LIMIT,
+                                                                        min_trade_value=0.002)
     sell_orders = [o for o in orders if o.action == Actions.SELL]
     buy_orders = [o for o in orders if o.action == Actions.BUY]
 
@@ -36,10 +36,18 @@ if __name__ == '__main__':
     r = raw_input("Y/n ")
     if r == 'Y':
         for order in sell_orders:
-            pprint(exec_order_spec(order))
+            print ">>", order
+            try:
+                pprint(exec_order_spec(order))
+            except Exception, e:
+                print "\n\n ERROR \n\n", e, "\n\n"
 
     print "Exec buys?"
     r = raw_input("Y/n ")
     if r == 'Y':
         for order in buy_orders:
-            pprint(exec_order_spec(order))
+            print ">>", order
+            try:
+                pprint(exec_order_spec(order))
+            except Exception, e:
+                print "\n\n ERROR \n\n", e, "\n\n"
