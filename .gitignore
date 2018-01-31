@@ -102,3 +102,6 @@ ENV/
 
 # API Key
 *key.json
+
+pybox
+.vscode
