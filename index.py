@@ -101,6 +101,10 @@ class Index(object):
 
         # There might be some coins left that we no longer care about.
         for coin, current_value in portfolio.items():
+            # The exchange imposes a minimum order.
+            order_value = current_value * prices.get(coin, 0)
+            if order_value < min_trade_value:
+                continue
             order = OrderSpec(action=Actions.SELL,
                               coin=coin,
                               price=prices.get(coin, 0),
