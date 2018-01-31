@@ -37,13 +37,16 @@ def exec_order_spec(order_spec):
 
     symbol = '%s/%s' % (order_spec.coin, MAIN_CURRENCY)
     if order_spec.action == Actions.BUY:
-        fn = b.create_limit_buy_order
+        # fn = b.create_limit_buy_order
+        fn = b.create_market_buy_order
     elif order_spec.action == Actions.SELL:
-        fn = b.create_limit_sell_order
+        # fn = b.create_limit_sell_order
+        fn = b.create_market_sell_order
     else:
         raise ValueError("Invalid action")
 
-    return fn(symbol, order_spec.amount, order_spec.price)
+    # return fn(symbol, order_spec.amount, order_spec.price)
+    return fn(symbol, order_spec.amount)
 
     # symbol = '%s%s' % (order_spec.coin, MAIN_CURRENCY)
     #
