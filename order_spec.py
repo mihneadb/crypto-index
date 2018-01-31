@@ -10,8 +10,10 @@ class OrderSpec(object):
         self.amount = truncate(amount, PRECISION_DECIMALS)
 
     def __repr__(self):
-        return 'Order: %s %f of %s for %f each' % (self.action, self.amount,
-                                                   self.coin, self.price)
+        return 'Order: %s %f of %s for %f each, total %f' % (
+                                                   self.action, self.amount,
+                                                   self.coin, self.price,
+                                                   self.amount * self.price)
 
     def __eq__(self, other):
         return (self.action == other.action and
