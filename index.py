@@ -4,7 +4,7 @@ from order_spec import OrderSpec
 
 class Index(object):
 
-    def get_portfolio_value(self, balance, prices):
+    def get_portfolio_value(self, balance, prices, min_trade_value):
         """Computes total amount that the portfolio is worth."""
         portfolio_value = 0.0
 
@@ -12,7 +12,9 @@ class Index(object):
             if item['name'] == MAIN_CURRENCY:
                 portfolio_value += item['value']
             else:
-                portfolio_value += item['value'] * prices.get(item['name'], 0)
+                value = item['value'] * prices.get(item['name'], 0)
+                if value >= min_trade_value:
+                    portfolio_value += value
 
         return portfolio_value
 
@@ -78,7 +80,7 @@ class Index(object):
                                          value_key=value_key, top_limit=top_limit)
         top_market_data = self.get_top_market_data(exchange_market_data, top_assets)
 
-        portfolio_value = self.get_portfolio_value(balance, prices)
+        portfolio_value = self.get_portfolio_value(balance, prices, min_trade_value)
         ideal_portfolio = self.get_ideal_portfolio(portfolio_value, top_market_data)
 
         # Compute orders to exec.
