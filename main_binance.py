@@ -1,3 +1,5 @@
+import os
+
 from binance_growth_index import get_all_klines, klines_to_market_data, BinanceGrowthIndex
 from constants import Actions
 from index import Index
@@ -6,6 +8,7 @@ from market_binance import get_balance, exec_order_spec, get_market_data
 
 if __name__ == '__main__':
     TOP_LIMIT = 20
+    noinput = os.getenv('NOINPUT', False)
 
     balance = get_balance()
     market_data = get_market_data()
@@ -30,8 +33,11 @@ if __name__ == '__main__':
     print "To buy:"
     pprint(buy_orders)
 
-    print "Exec sells?"
-    r = raw_input("Y/n ")
+    if noinput:
+        r = 'Y'
+    else:
+        print "Exec sells?"
+        r = raw_input("Y/n ")
     if r == 'Y':
         for order in sell_orders:
             print ">>", order
@@ -40,8 +46,11 @@ if __name__ == '__main__':
             except Exception, e:
                 print "\n\n ERROR \n\n", e, "\n\n"
 
-    print "Exec buys?"
-    r = raw_input("Y/n ")
+    if noinput:
+        r = 'Y'
+    else:
+        print "Exec buys?"
+        r = raw_input("Y/n ")
     if r == 'Y':
         for order in buy_orders:
             print ">>", order
