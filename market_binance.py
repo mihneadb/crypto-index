@@ -1,4 +1,6 @@
 import json
+import os
+import sys
 
 from binance.client import Client
 import ccxt
@@ -8,13 +10,15 @@ from helpers import truncate
 
 
 def get_binance():
-    with open('binance_key.json') as f:
+    path = os.path.join(sys.path[0], 'binance_key.json')
+    with open(path) as f:
         data = json.load(f)
         return Client(data['key'], data['secret'])
 
 
 def get_binance_ccxt():
-    with open('binance_key.json') as f:
+    path = os.path.join(sys.path[0], 'binance_key.json')
+    with open(path) as f:
         data = json.load(f)
         return ccxt.binance({'apiKey': data['key'], 'secret': data['secret']})
 
