@@ -1,4 +1,5 @@
 import os
+import time
 
 from binance_growth_index import get_all_klines, klines_to_market_data, BinanceGrowthIndex
 from constants import Actions
@@ -21,6 +22,8 @@ if __name__ == '__main__':
     buy_orders = [o for o in orders if o.action == Actions.BUY]
 
     from pprint import pprint
+    print "Now:", time.time()
+
     print "Balance now:"
     pprint(balance)
 
