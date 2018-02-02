@@ -32,6 +32,24 @@ def get_balance_entry(balance):
     }
 
 
+def get_market_data():
+    tickers = get_binance().get_all_tickers()
+    market_data = []
+    for ticker in tickers:
+        symbol = ticker['symbol']
+        
+        if not symbol.endswith(MAIN_CURRENCY):
+            continue
+
+        market_data.append({
+            'name': symbol.split(MAIN_CURRENCY)[0],
+            'price': float(ticker['price']),
+            'volume': 1,
+            'market_cap': 1
+        })
+    return market_data
+
+
 def exec_order_spec(order_spec):
     b = get_binance_ccxt()
 

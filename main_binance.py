@@ -1,16 +1,14 @@
 from binance_growth_index import get_all_klines, klines_to_market_data, BinanceGrowthIndex
 from constants import Actions
 from index import Index
-from market_binance import get_balance, exec_order_spec
+from market_binance import get_balance, exec_order_spec, get_market_data
 
 
 if __name__ == '__main__':
     TOP_LIMIT = 20
 
     balance = get_balance()
-
-    all_klines = get_all_klines()
-    market_data = klines_to_market_data(all_klines)
+    market_data = get_market_data()
 
     orders, ideal_portfolio = BinanceGrowthIndex().get_rebalance_orders(market_data, market_data,
                                                                         balance,
