@@ -86,6 +86,10 @@ class Index(object):
         # Compute orders to exec.
         orders = []
         for coin, ideal_value in ideal_portfolio.items():
+            # No action needed for main currency.
+            if coin == MAIN_CURRENCY:
+                continue
+
             current_value = portfolio.pop(coin, 0)
             diff = ideal_value - current_value
 

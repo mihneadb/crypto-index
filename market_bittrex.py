@@ -14,8 +14,14 @@ def get_bittrex():
 def get_market_data(currency):
     summaries = get_bittrex().get_market_summaries()
     relevant_summaries = [i for i in summaries['result'] if i['MarketName'].startswith(currency)]
-    return [get_market_data_entry(s, currency) for s in relevant_summaries]
 
+    market_data = [get_market_data_entry(s, currency) for s in relevant_summaries]
+    
+    # Add btc as well.
+    btc = {'name': 'BTC', 'price': 1}
+    market_data.append(btc)
+    
+    return market_data
 
 def get_market_data_entry(summary, currency):
     """Converts from Bittrex format to our own."""

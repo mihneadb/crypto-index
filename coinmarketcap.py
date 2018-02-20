@@ -10,7 +10,7 @@ def get_coinmarketcap(main_currency=MAIN_CURRENCY):
     return scrape_coins(soup, main_currency=main_currency)
 
 
-def scrape_coins(soup, main_currency=MAIN_CURRENCY):
+def scrape_coins(soup, main_currency=MAIN_CURRENCY, skip_main_currency=False):
     rows = soup.find_all('table', {'id': 'currencies-all'})[0].find_all('tr')[1:]
 
     data = []
@@ -33,7 +33,7 @@ def scrape_coins(soup, main_currency=MAIN_CURRENCY):
             continue
 
         # Skip main currency, can't "buy" it.
-        if coin_data['name'] == main_currency:
+        if skip_main_currency and coin_data['name'] == main_currency:
             continue
 
         data.append(coin_data)
