@@ -51,6 +51,11 @@ def get_market_data():
             'volume': 1,
             'market_cap': 1
         })
+
+    # Add btc as well.
+    btc = {'name': 'BTC', 'price': 1}
+    market_data.append(btc)
+
     return market_data
 
 
