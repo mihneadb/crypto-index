@@ -26,7 +26,8 @@ def get_binance_ccxt():
 def get_balance():
     account = get_binance().get_account()
     formatted = [get_balance_entry(b) for b in account['balances']]
-    return [b for b in formatted if b['value']]
+    balance = [b for b in formatted if b['value']]
+    return sorted(balance, key=lambda b: b['value'], reverse=True)
 
 
 def get_balance_entry(balance):
