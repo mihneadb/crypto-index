@@ -1,3 +1,7 @@
+import json
+import os
+import sys
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -5,10 +9,27 @@ from constants import MAIN_CURRENCY
 
 
 def get_coinmarketcap(main_currency=MAIN_CURRENCY):
-    r = requests.get('https://coinmarketcap.com/all/views/all/')
-    soup = BeautifulSoup(r.text, 'html5lib')
-    return scrape_coins(soup, main_currency=main_currency)
+    path = os.path.join(sys.path[0], 'coinmarketcap_key.json')
+    with open(path) as f:
+        data = json.load(f)
+        key = data['key']
 
+    headers = {
+        'Accepts': 'application/json',
+        'X-CMC_PRO_API_KEY': key
+    }
+    params = {
+        'limit': 200,
+        'convert': 'BTC'
+    }
+    r = requests.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest', params=params, headers=headers)
+
+    return [{
+        'name': c['symbol'],
+        'price': c['quote']['BTC']['price'],
+        'volume': c['quote']['BTC']['volume_24h'],
+        'market_cap': c['quote']['BTC']['market_cap']
+    } for c in r.json()['data']]
 
 def scrape_coins(soup, main_currency=MAIN_CURRENCY, skip_main_currency=False):
     rows = soup.find_all('table', {'id': 'currencies-all'})[0].find_all('tr')[1:]
