@@ -1,7 +1,7 @@
 import argparse
 import json
 
-from constants import ValueKeys
+from constants import ValueKeys, MIN_TRADE_VALUE
 from index import Index
 
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         balance = portfolio_to_balance(portfolio)
 
     prices = {item['name']: item['price'] for item in market_data}
-    total_value = Index().get_portfolio_value(balance, prices)
+    total_value = Index().get_portfolio_value(balance, prices, MIN_TRADE_VALUE)
     # print portfolio
     # print len(portfolio)
-    print "Started with %f BTC, ended with (equivalent) %f BTC." % (INITIAL_BTC, total_value)
+    print("Started with %f BTC, ended with (equivalent) %f BTC." % (INITIAL_BTC, total_value))
