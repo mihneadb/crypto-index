@@ -6,7 +6,7 @@ TOP_LIMIT = 20
 NUM_DAYS_TO_CHECK = 2
 
 
-IGNORED_CURRENCIES = ['DOGE']
+IGNORED_CURRENCIES = ['USDT', 'USDC', 'BUSD']
 
 
 class Actions(object):
