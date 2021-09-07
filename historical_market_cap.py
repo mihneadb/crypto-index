@@ -6,7 +6,7 @@ import requests
 
 from coinmarketcap import scrape_coins
 
-date = '20171126'
+date = '20210905'
 data = []
 
 
@@ -19,15 +19,13 @@ for i in range(52):
     data.append([date, week_data])
 
     # Find prev week date.
-    for a in soup.find('ul', {'class': 'bottom-paginator'}).find_all('a'):
+    for a in soup.find('div', {'class': 'cmc-button-group'}).find_all('a'):
         if 'Previous Week' in a.text:
             date = re.search(r'\d+', a.get('href')).group(0)
             break
     else:
-        print 'Stopped, nothing after', date
+        print("Stopped, nothing after", date)
         break
 
 with open('scrape_results.json', 'w') as f:
     json.dump(data, f)
-
-import ipdb; ipdb.set_trace()
